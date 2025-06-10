@@ -1,86 +1,84 @@
-# doniarish-LUNG-CANCER-DETECTION-WITH-CNN
-🔬 Lung & Colon Cancer Histopathological Image Classification
-This project implements a Convolutional Neural Network (CNN) using PyTorch to classify histopathological images of lung tissue into three distinct categories:
+# 🔬 Lung & Colon Cancer Histopathological Image Classification
 
-Adenocarcinoma (malignant)
+This project implements a Convolutional Neural Network (CNN) using **PyTorch** to classify histopathological images of lung tissue into three distinct categories:
 
-Squamous cell carcinoma (malignant)
+- **Adenocarcinoma** *(malignant)*
+- **Squamous cell carcinoma** *(malignant)*
+- **Benign lung tissue** *(non-cancerous)*
 
-Benign lung tissue (non-cancerous)
+It utilizes a publicly available dataset from **Kaggle**, providing a strong baseline for digital pathology classification using deep learning.
 
-It utilizes a publicly available dataset from Kaggle, providing a baseline for digital pathology classification using deep learning.
+---
 
-🧠 Objective
-The main objective of this project is to:
+## 🧠 Objective
 
-Explore deep learning techniques for medical image classification.
+The main objectives of this project are to:
 
-Build a CNN from scratch (without pre-trained models).
+- Explore deep learning techniques for medical image classification.
+- Build a CNN from scratch *(without pre-trained models)*.
+- Understand model behavior through metrics, visualizations, and failure cases.
+- Provide a clear and reproducible PyTorch-based pipeline for academic and research use.
 
-Understand model behavior by evaluating metrics, visualizations, and failure cases.
+---
 
-Provide a clear and reproducible PyTorch-based pipeline for academic use.
+## 📦 Dataset Overview
 
-📦 Dataset Overview
-Source: Kaggle - Lung and Colon Cancer Histopathological Images
+- **Source:** Kaggle - [Lung and Colon Cancer Histopathological Images](https://www.kaggle.com/datasets/andrewmvd/lung-and-colon-cancer-histopathological-images)
+- **Image Format:** RGB JPEG
+- **Image Size:** Varies *(resized to 224×224)*
+- **Classes:**
+  - `lung_aca`: Adenocarcinoma *(malignant)*
+  - `lung_scc`: Squamous cell carcinoma *(malignant)*
+  - `lung_n`: Normal lung tissue *(benign)*
+- **Split:** 70% train, 15% validation, 15% test *(manual split)*
+- **Class Balance:** Relatively balanced, slight variations
 
-Image size: Varies (resized to 224×224 during preprocessing)
+---
 
-Classes:
+## 🧬 Project Structure
 
-lung_aca: Adenocarcinoma (malignant)
-
-lung_scc: Squamous cell carcinoma (malignant)
-
-lung_n: Normal lung tissue (benign)
-
-Format: RGB JPEG images
-
-Split Strategy: Manual 70% train, 15% validation, 15% test split
-
-Balance: Relatively balanced but varies slightly
-
-🧬 Project Structure
-graphql
-Copy
-Edit
+```
 .
-├── data/                        # Dataset directory (after extraction)
+├── data/
 │   └── lung_colon_image_set/
 │       └── lung_image_sets/
 │           ├── lung_aca/
 │           ├── lung_scc/
 │           └── lung_n/
-├── src/                         # Source code
-│   ├── dataset.py               # PyTorch Dataset and transforms
-│   ├── model.py                 # CNN architecture
-│   ├── train.py                 # Training pipeline
-│   └── evaluate.py              # Model evaluation and metrics
-├── notebooks/                   # Optional: Jupyter exploration
+├── src/
+│   ├── dataset.py         # PyTorch dataset and augmentations
+│   ├── model.py           # CNN architecture
+│   ├── train.py           # Training pipeline
+│   └── evaluate.py        # Evaluation logic
 ├── outputs/
-│   ├── best_cnn_model.pth       # Saved best model
+│   ├── best_cnn_model.pth
 │   ├── confusion_matrix.png
 │   └── pr_curve.png
-├── README.md
+├── notebooks/
 ├── requirements.txt
-└── .gitignore
-⚙️ Setup Instructions
-1. Clone Repository
-bash
-Copy
-Edit
+├── .gitignore
+└── README.md
+```
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone the repository
+
+```bash
 git clone https://github.com/yourusername/lung-cancer-cnn
 cd lung-cancer-cnn
-2. Install Dependencies
-bash
-Copy
-Edit
-pip install -r requirements.txt
-Contents of requirements.txt:
+```
 
-txt
-Copy
-Edit
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+**requirements.txt**
+```
 torch
 torchvision
 numpy
@@ -89,138 +87,153 @@ scikit-learn
 seaborn
 pillow
 kagglehub
-3. Download Dataset
-Use Kaggle API or kagglehub:
+```
 
-python
-Copy
-Edit
+### 3. Download the dataset
+
+Using Python:
+
+```python
 import kagglehub
 kagglehub.dataset_download("andrewmvd/lung-and-colon-cancer-histopathological-images")
-OR use CLI:
+```
 
-bash
-Copy
-Edit
+Or use CLI:
+
+```bash
 kaggle datasets download -d andrewmvd/lung-and-colon-cancer-histopathological-images
 unzip lung-and-colon-cancer-histopathological-images.zip -d data/
-🛠️ Model Architecture
-LungCancerCNN (src/model.py)
-python
-Copy
-Edit
-Conv2d(3, 32, kernel_size=3) → ReLU → MaxPool  
-Conv2d(32, 64, kernel_size=3) → ReLU → MaxPool  
-Conv2d(64, 128, kernel_size=3) → ReLU → MaxPool  
-Flatten → Linear(128*28*28, 512) → ReLU → Dropout  
-Linear(512, 128) → ReLU  
-Linear(128, 3) → LogSoftmax  
-Activation: ReLU
+```
 
-Output: Log-probabilities (log softmax) with 3 output neurons
+---
 
-🎓 Training Strategy
+## 🛠️ Model Architecture
+
+Implemented in `src/model.py`:
+
+```python
+Conv2d(3, 32, kernel_size=3) → ReLU → MaxPool
+Conv2d(32, 64, kernel_size=3) → ReLU → MaxPool
+Conv2d(64, 128, kernel_size=3) → ReLU → MaxPool
+Flatten → Linear(128*28*28, 512) → ReLU → Dropout
+Linear(512, 128) → ReLU
+Linear(128, 3) → LogSoftmax
+```
+
+- **Activation:** ReLU  
+- **Output:** Log-probabilities for 3 classes
+
+---
+
+## 🎓 Training Strategy
+
 Run the training script:
 
-bash
-Copy
-Edit
+```bash
 python src/train.py --data_dir data/lung_colon_image_set/lung_image_sets
-Features:
+```
 
-Optimizer: torch.optim.SGD
+**Features:**
 
-LR scheduler: ReduceLROnPlateau
+- Optimizer: `torch.optim.SGD`
+- LR Scheduler: `ReduceLROnPlateau`
+- Epochs: 15
+- Batch Size: 32
+- Best model saved as: `outputs/best_cnn_model.pth`
 
-Epochs: 15
+---
 
-Batch size: 32
+## 🧪 Evaluation
 
-Best model saved as best_cnn_model.pth
+Evaluate model performance:
 
-🧪 Evaluation
-To evaluate the model:
-
-bash
-Copy
-Edit
+```bash
 python src/evaluate.py --model_path outputs/best_cnn_model.pth
-Output:
-Accuracy
+```
 
-Precision, Recall, F1 (per class)
+**Outputs:**
 
-Confusion matrix
+- Accuracy
+- Per-class Precision, Recall, F1
+- Confusion Matrix
+- PR and ROC curves
+- Misclassified examples
 
-PR & ROC curves
+---
 
-Misclassified image samples
+## 📈 Results
 
-📈 Results
-Class	Precision	Recall	F1-score
-Adenocarcinoma	0.94	0.89	0.91
-Squamous Cell	0.90	0.94	0.92
-Benign	0.99	1.00	0.99
+| Class            | Precision | Recall | F1-Score |
+|------------------|-----------|--------|----------|
+| Adenocarcinoma   | 0.94      | 0.89   | 0.91     |
+| Squamous Cell    | 0.90      | 0.94   | 0.92     |
+| Benign           | 0.99      | 1.00   | 0.99     |
 
-Overall Accuracy: 94.22%
+- **Overall Accuracy:** 94.22%
+- **AUC (micro/macro):** Calculated via ROC curve
 
-AUC (micro/macro): Reported via ROC curve
+---
 
-Model performs very well on benign cases; some confusion between cancer subtypes.
+## 📸 Visualizations
 
-📸 Visualizations
-🔁 Confusion Matrix
+- ✅ Confusion Matrix  
+- ✅ Precision-Recall Curve  
+- ✅ Misclassified Image Samples
 
-📉 Precision-Recall Curve
+---
 
-🤖 Misclassified Examples
-Image	True Label	Predicted Label
-📷	Squamous	Adeno
-📷	Benign	Adeno
+## 💡 Why This Matters
 
-💡 Why This Matters
-Lung cancer is one of the leading causes of cancer-related deaths globally.
+- Lung cancer is a leading cause of cancer-related deaths globally.
+- Accurate early detection via deep learning aids medical diagnosis.
+- Automating classification supports pathologists in decision-making.
 
-Early and accurate classification of histopathology slides can improve diagnosis.
+---
 
-Deep learning automates tedious tasks for pathologists and aids decision-making.
+## 🔧 Customization Guide
 
-🔧 Customization
-Feature	How to Modify
-Architecture	src/model.py
-Augmentation	src/dataset.py
-Training loop	src/train.py
-Visualization	src/evaluate.py
-Learning Rate	Pass --learning_rate as CLI arg
+| Feature        | Modify File     |
+|----------------|-----------------|
+| Architecture   | `src/model.py`  |
+| Augmentations  | `src/dataset.py`|
+| Training logic | `src/train.py`  |
+| Evaluation     | `src/evaluate.py`|
+| Learning Rate  | CLI: `--learning_rate`|
 
-🔄 Future Work
-✅ Apply Transfer Learning (e.g., ResNet50)
+---
 
-✅ Improve augmentation pipeline
+## 🔄 Future Work
 
-⏳ Use Grad-CAM for model interpretability
+- ✅ Apply **Transfer Learning** (e.g., ResNet50)  
+- ✅ Improve data **augmentation** techniques  
+- ⏳ Implement **Grad-CAM** for interpretability  
+- ⏳ Add **Web UI** for demo (Flask or Gradio)  
+- ⏳ Experiment tracking via **W&B** or **TensorBoard**  
+- ⏳ Explore **Vision Transformers (ViT)**
 
-⏳ Web UI for demo (Flask/Gradio)
+---
 
-⏳ Add experiment tracking with Weights & Biases or TensorBoard
+## 🧾 License
 
-⏳ Explore transformer-based vision models (ViT)
+This project is licensed under the [MIT License](LICENSE).
 
-🧾 License
-This project is licensed under the MIT License.
+---
 
-👋 Acknowledgements
-Dataset: Andrew MVD on Kaggle
+## 👋 Acknowledgements
 
-PyTorch Community
+- **Dataset:** [Andrew MVD on Kaggle](https://www.kaggle.com/datasets/andrewmvd/lung-and-colon-cancer-histopathological-images)
+- **Framework:** PyTorch  
+- **Support:** Medical experts and contributors
 
-Medical experts and contributors
+---
 
-📫 Contact
-For questions, suggestions, or collaborations:
+## 📫 Contact
 
-GitHub: @yourusername
+- **GitHub:** [@yourusername](https://github.com/yourusername)  
+- **Email:** doniarish1@gmail.com
 
-Email: doniarish1@gmail.com
+---
 
-🌟 LIKE THIS PROJECT? GIVE IT A ⭐ ON GITHUB!
+## 🌟 Like this project?
+
+Give it a ⭐ on GitHub!
